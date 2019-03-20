@@ -26,7 +26,7 @@ que te resulten útiles y reutilizarlas.
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import pdsmodulos as pds
+#import pdsmodulos as pds
 
 
 ###################################
@@ -122,15 +122,15 @@ def my_testbench( sig_type ):
     plt.show()
 
     
-        
+#%% Inicializacion y elección de funcion a realizar.
 # Uso de diferentes tipos de datos en Python            
 
 ## tipo de variable diccionario. Puedo crearlo iniciándolo mediante CONSTANTES
 
 sig_props = { 'tipo': 'senoidal', 
-              'frecuencia': (1, 1001), # Uso de tuplas para las frecuencias 
+              'frecuencia': (4, 1002), # Uso de tuplas para las frecuencias 
               'amplitud':   (1, 1),
-              'fase':       (0, 0)
+              'fase':       ((np.pi)/2 , 0)
              } 
 # Como también puedo agregar un campo descripción de manera programática
 # este tipo de sintaxis es *MUY* de Python
