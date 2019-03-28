@@ -34,7 +34,7 @@ def cuantizar_senial(yy,N,Q):
     
     #yy_qq = np.array([], dtype=np.float).reshape(N,0)
     
-    yy_qq = np.zeros
+    yy_qq = np.zeros(N)
     for k in range(N):
         yy_qq[k] = Q * np.round(yy[k]/Q)
     
@@ -90,7 +90,7 @@ plt.ylabel('Amplitud [V]')
 plt.show()
 
 #Numero de bits que se desea hacer la adquisicion
-nbits = 4
+nbits = 1
 #VFS
 vfs = 1
 #Paso de la cuantizacion
@@ -101,8 +101,11 @@ yy_qq = cuantizar_senial(yy_nn_rs,Nrs,Q)
 
 plt.figure(1)
 line_hdls = plt.plot(tt_rs, yy_qq)
-plt.title('Señal: ' + 'Senoidal + Ruido + Resampleada con un factor: {} + Samplea a 4 bits'.format(scale_factor))
+plt.title('Señal: ' + 'Senoidal + Ruido + Resampleada con un factor: {} + Samplea a {} bits'.format(scale_factor,nbits))
 plt.xlabel('tiempo [segundos]')
 plt.ylabel('Amplitud [V]')
 plt.show()
+
+unique_values = np.unique(yy_qq);
+print("Valores unicos:{}".format(unique_values.size))
 
