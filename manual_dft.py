@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 import scipy.fftpack as sc
 
+import time
 
 def generador_senoidal (fs, f0, N, a0=1, p0=0):
     
@@ -68,7 +69,7 @@ def simple_fft(yy,fs,N):
     """
     XX = (2/N)*np.abs(sc.fft(yy));
     XX = XX[0:N//2];
-    ff = np.linspace(0,fs/2,N//2)
+    ff = np.linspace(0,fs/2,N//2);
      
     return ff,XX
 
@@ -77,11 +78,13 @@ plt.close('all')
 
 fs = 1000
 f0 = 2
-N  = 1000
+N  = 512
 a0 = 1
 p0 = 2*np.pi
 
+
 (tt,signal) = generador_senoidal(fs , f0 , N , a0 , p0 );
+
 
 plt.figure(1)
 line_hdls = plt.plot(tt,signal)
@@ -90,7 +93,11 @@ plt.xlabel('tiempo [segundos]')
 plt.ylabel('Amplitud [V]')
 plt.show()
 
+time_before_dft = time.process_time_ns()
 (ff,half_dft) = simple_dft(signal,fs,N)
+time_after_dft = time.process_time_ns()
+
+print('Tiempo realizando la DFT:{}[s]'.format((time_after_dft-time_before_dft)/1e9))
 
 plt.figure(2)
 plt.stem(ff,half_dft)
@@ -98,7 +105,11 @@ plt.title('Espectro de la señal haciendo DFT')
 plt.xlabel('Frecuencia [Hz]')
 plt.ylabel('Magnitud Normalizada')
 
+time_before_fft = time.process_time_ns()
 (ff,half_fft) = simple_fft(signal,fs,N)
+time_after_fft = time.process_time_ns()
+
+print('Tiempo realizando la FFT:{}[s]'.format((time_after_fft-time_before_fft)/1e9))
 
 plt.figure(3)
 plt.stem(ff,half_fft)
