@@ -42,17 +42,25 @@ def simple_fft(yy,fs,N):
     XX: Espectro de la señal en valor absoluto y solo una mitad.
         Magnitud Normalizada.
     """
+    
+    delta_f = (fs/2)/(N//2) ;
+    
     XX = (2/N)*np.abs(sc.fft(yy));
     XX = XX[0:N//2];
-    ff = np.linspace(0,fs/2,N//2);
+    ff = np.linspace(0,(fs/2)-delta_f,N//2);
      
     return ff,XX
 
+def center_of_mass_fft(ff,half_fft):
+    return ((np.sum(np.multiply(ff,half_fft)))/np.sum(half_fft))
+
+#Cierro todos los graficos por default.
+plt.close('all')
 
 fs = 1000
 ts = 1/fs
 f0 = fs/4
-delta = 0.25
+delta = 0.5
 N  = 1000
 a0 = 1
 p0 = 0
@@ -60,7 +68,7 @@ p0 = 0
 #Generar la senoidal
 (tt,signal) = generador_senoidal(fs , f0 + delta , N , a0 , p0 );
 
-signal = np.pad(signal,(N//10,N*10),'constant')
+signal = np.pad(signal,(0,0),'constant')
 tt = np.linspace(0,(len(signal)-1)*ts, len(signal)).flatten()
 
 plt.figure(1)
@@ -80,11 +88,13 @@ plt.xlabel('Frecuencia [Hz]')
 plt.ylabel('Magnitud Normalizada')
 plt.show()
 
-print('Magnitud Frecuencia Central:{}'.format(half_fft[int(f0)]))
-print('Magnitud Frecuencia Adyacente:{}'.format(half_fft[int(f0+1)]))
+max_mag_value = np.amax(half_fft);
+max_freq_value = np.where(half_fft == max_mag_value)
 
-spread = np.sum(np.concatenate((half_fft[:int(f0)],half_fft[int(f0)+1:]),axis=0))
-print('Magnitud Resto de las frecuencias:{}'.format(spread))
+print('Frecuencia Target es: {} Hz'.format(f0 + delta))
+print('Frecuencia donde se encuentra el maximo: {} Hz'.format(round(ff[max_freq_value[0][0]],2)))
+print('Centro de masa de la frecuencia {}'.format(round(center_of_mass_fft(ff,half_fft),2)))
+print('Paso de frecuencia:{} Hz'.format((ff[1]-ff[0])))
 #print('{}'.format(sum_test))
 
 
