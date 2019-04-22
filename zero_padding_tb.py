@@ -68,7 +68,7 @@ p0 = 0
 #Generar la senoidal
 (tt,signal) = generador_senoidal(fs , f0 + delta , N , a0 , p0 );
 
-signal = np.pad(signal,(0,0),'constant')
+signal = np.pad(signal,(0,9*N),'constant')
 tt = np.linspace(0,(len(signal)-1)*ts, len(signal)).flatten()
 
 plt.figure(1)
@@ -92,8 +92,8 @@ max_mag_value = np.amax(half_fft);
 max_freq_value = np.where(half_fft == max_mag_value)
 
 print('Frecuencia Target es: {} Hz'.format(f0 + delta))
-print('Frecuencia donde se encuentra el maximo: {} Hz'.format(round(ff[max_freq_value[0][0]],2)))
-print('Centro de masa de la frecuencia {}'.format(round(center_of_mass_fft(ff,half_fft),2)))
+print('Frecuencia donde se encuentra el maximo: {} Hz'.format(round(ff[max_freq_value[0][0]],4)))
+print('Centro de masa de la frecuencia {}'.format(round(center_of_mass_fft(ff,half_fft),4)))
 print('Paso de frecuencia:{} Hz'.format((ff[1]-ff[0])))
 #print('{}'.format(sum_test))
 
