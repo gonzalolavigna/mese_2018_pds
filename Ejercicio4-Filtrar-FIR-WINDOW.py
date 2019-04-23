@@ -56,13 +56,13 @@ plt.close('all')
 ecg,hb_p1,hb_p2,qrs_detections,qrs_p1 = get_ECG_TP4_MAT()
 
 #Load high pass FIR
-files = np.load('FIR_HIGHBAND.npz')
+files = np.load('FIR_HIGHBAND_WINDOW.npz')
 coefficient=files['ba.npy']
 
 b = coefficient[0].flatten()
 a = coefficient[1].flatten()
 
-filtered_ecg = signal.filtfilt(b,a,ecg)
+filtered_ecg_1 = signal.filtfilt(b,a,ecg)
 
 
 #Frecuencia de sampleo es 1Khz
@@ -83,14 +83,14 @@ zonas_sin_interf = (
 
 #Analisis de una seccion con ruido baja frecuencia
 slice_baja_frec = zonas_con_interf_baja_frec[0].astype(int)
-ecg_slice = ecg[slice_baja_frec[0]:slice_baja_frec[1]]
-filtered_ecg_slice_1 = filtered_ecg[slice_baja_frec[0]:slice_baja_frec[1]]
+ecg_slice_1 = ecg[slice_baja_frec[0]:slice_baja_frec[1]]
+filtered_ecg_slice_1 = filtered_ecg_1[slice_baja_frec[0]:slice_baja_frec[1]]
 
-N  = np.size(ecg_slice)
+N  = np.size(ecg_slice_1)
 tt = np.linspace(0, (N-1)*ts, N).flatten()
 
 plt.figure(1)
-line_hdls = plt.plot(tt,ecg_slice,'b')
+line_hdls = plt.plot(tt,ecg_slice_1,'b')
 line_hdls_2 = plt.plot(tt,filtered_ecg_slice_1,'r')
 plt.title('SLICE BAJA FRECUENCIA')
 plt.xlabel('tiempo [segundos]')
@@ -108,25 +108,25 @@ plt.show()
 
 #load low pass FIR
 #Load low band pass FIR
-files = np.load('FIR_LOWPASS.npz')
+files = np.load('FIR_LOWPASS_WINDOW.npz')
 coefficient=files['ba.npy']
 
 b = coefficient[0].flatten()
 a = coefficient[1].flatten()
 
 #Volvemos a pasar la señal filtrada por el FIR
-filtered_ecg = signal.filtfilt(b,a,filtered_ecg)
+filtered_ecg_2 = signal.filtfilt(b,a,filtered_ecg_1)
 
 #Analisis de una seccion con ruido baja frecuencia
 slice_baja_frec = zonas_con_interf_baja_frec[0].astype(int)
-ecg_slice = ecg[slice_baja_frec[0]:slice_baja_frec[1]]
-filtered_ecg_slice_2 = filtered_ecg[slice_baja_frec[0]:slice_baja_frec[1]]
+ecg_slice_2 = ecg[slice_baja_frec[0]:slice_baja_frec[1]]
+filtered_ecg_slice_2 = filtered_ecg_2[slice_baja_frec[0]:slice_baja_frec[1]]
 
-N  = np.size(ecg_slice)
+N  = np.size(ecg_slice_2)
 tt = np.linspace(0, (N-1)*ts, N).flatten()
 
 plt.figure(3)
-line_hdls = plt.plot(tt,ecg_slice,'b')
+line_hdls = plt.plot(tt,ecg_slice_2,'b')
 line_hdls_2 = plt.plot(tt,filtered_ecg_slice_1,'g')
 line_hdls_3 = plt.plot(tt,filtered_ecg_slice_2,'r')
 plt.title('SLICE BAJA FRECUENCIA')
@@ -134,3 +134,31 @@ plt.xlabel('tiempo [segundos]')
 plt.ylabel('Amplitud [muestras]')
 plt.show()
 
+
+#Ahora vamos a probar el Filtro FIR en una zona sin ruido de baja frecuencia
+slice_sin_baja_frec     =  zonas_sin_interf[0].astype(int)
+ecg_sin_baja_sclice             = ecg[slice_sin_baja_frec[0]:slice_sin_baja_frec[1]]
+filtered_ecg_sin_baja_slice_1   = filtered_ecg_1[slice_sin_baja_frec[0]:slice_sin_baja_frec[1]]
+filtered_ecg_sin_baja_slice_2   = filtered_ecg_2[slice_sin_baja_frec[0]:slice_sin_baja_frec[1]]
+
+N  = np.size(ecg_sin_baja_sclice)
+tt = np.linspace(0, (N-1)*ts, N).flatten()
+
+plt.figure(4)
+line_hdls = plt.plot(tt,ecg_sin_baja_sclice,'b')
+line_hdls_2 = plt.plot(tt,filtered_ecg_sin_baja_slice_1,'g')
+line_hdls_3 = plt.plot(tt,filtered_ecg_sin_baja_slice_2,'r')
+plt.title('SLICE SIN RUIDO BAJA FRECUENCIA')
+plt.xlabel('tiempo [segundos]')
+plt.ylabel('Amplitud [muestras]')
+plt.show()
+
+
+#(ff,half_fft) = simple_fft(ecg_sin_baja_sclice,fs,len(ecg_sin_baja_sclice))
+
+#plt.figure(5)
+#plt.stem(ff,half_fft)
+#plt.title('Espectro de la señal haciendo FFT')
+#plt.xlabel('Frecuencia [Hz]')
+#plt.ylabel('Magnitud Normalizada')
+#plt.show()
