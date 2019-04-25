@@ -154,11 +154,11 @@ plt.ylabel('Amplitud [muestras]')
 plt.show()
 
 
-(ff,half_fft) = simple_fft(ecg_sin_baja_sclice,fs,len(ecg_sin_baja_sclice))
+#(ff,half_fft) = simple_fft(ecg_sin_baja_sclice,fs,len(ecg_sin_baja_sclice))
 
-plt.figure(5)
-plt.stem(ff,half_fft)
-plt.title('Espectro de la señal haciendo FFT')
-plt.xlabel('Frecuencia [Hz]')
-plt.ylabel('Magnitud Normalizada')
-plt.show()
+#plt.figure(5)
+#plt.stem(ff,half_fft)
+#plt.title('Espectro de la señal haciendo FFT')
+#plt.xlabel('Frecuencia [Hz]')
+#plt.ylabel('Magnitud Normalizada')
+#plt.show()
